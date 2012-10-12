@@ -45,17 +45,25 @@ class NavigationArticleDCA extends Backend {
 		)->execute($objDC->id)->fetchAllAssoc();
 	}
 	
+	protected $arrSets;
+	
 	public function saveForPage($arrRows, $objDC) {
 		$arrRows = deserialize($arrRows);
+		$intCount = count($arrRows);
+		$this->arrSets[$objDC->id] = array();
 		
 		foreach($arrRows as $arrRow) {
 			$arrRow['page'] = $objDC->id;
 			$arrRow['module'] = max(0, intval($arrRow['module']));
 			$arrRow['article'] = intval($arrRow['article']);
-			$arrRow['article'] && $this->arrSets[$objDC->id][$arrRow['module']] = $arrRow;
+			if($arrRow['article']) {
+				$this->arrSets[$objDC->id][$arrRow['module']] = $arrRow;
+			} else {
+				$intCount--;
+			}
 		}
 		
-		if(count($arrRows) != count($this->arrSets[$objDC->id])) {
+		if($intCount != count($this->arrSets[$objDC->id])) {
 			throw new Exception('duplicate module');
 		}
 		
@@ -63,8 +71,7 @@ class NavigationArticleDCA extends Backend {
 	}
 	
 	public function submitPage($objDC) {
-		$arrSets = $this->arrSets[$objDC->id];
-		if(!$arrSets) {
+		if(!isset($this->arrSets[$objDC->id])) {
 			return;
 		}
 		
@@ -73,7 +80,7 @@ class NavigationArticleDCA extends Backend {
 			'DELETE FROM tl_bbit_navi_art WHERE page = ?'
 		)->execute($objDC->id);
 		
-		foreach($arrSets as $arrSet) {
+		if($this->arrSets[$objDC->id]) foreach($this->arrSets[$objDC->id] as $arrSet) {
 			$objDB->prepare(
 				'INSERT INTO tl_bbit_navi_art %s'
 			)->set($arrSet)->execute();
