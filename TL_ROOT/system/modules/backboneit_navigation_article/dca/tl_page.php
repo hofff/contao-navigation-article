@@ -19,7 +19,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = array(
 				'options_callback'	=> array('NavigationArticleDCA', 'getModules'),
 				'eval'		=> array(
 					'includeBlankOption'=> true,
-// 					'submitOnChange'=> true,
 					'chosen'		=> true,
 					'style'			=> 'width: 190px;'
 				),
@@ -33,7 +32,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = array(
 				'options_callback'	=> array('IncludeArticleDCA', 'getArticles'),
 				'eval'		=> array(
 					'includeBlankOption'=> true,
-// 					'submitOnChange'=> true,
 					'chosen'		=> true,
 					'style'			=> 'width: 190px;'
 				),
