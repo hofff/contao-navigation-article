@@ -54,9 +54,9 @@ class NavigationArticleDCA extends Backend {
 		
 		foreach($arrRows as $arrRow) {
 			$arrRow['page'] = $objDC->id;
-			$arrRow['module'] = max(0, intval($arrRow['module']));
+			$arrRow['module'] = intval($arrRow['module']);
 			$arrRow['article'] = intval($arrRow['article']);
-			if($arrRow['article']) {
+			if($arrRow['module'] > 0 && $arrRow['article'] > 0) {
 				$this->arrSets[$objDC->id][$arrRow['module']] = $arrRow;
 			} else {
 				$intCount--;
@@ -64,7 +64,7 @@ class NavigationArticleDCA extends Backend {
 		}
 		
 		if($intCount != count($this->arrSets[$objDC->id])) {
-			throw new Exception('duplicate module');
+			throw new Exception($GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_errDuplicate']);
 		}
 		
 		return null;
