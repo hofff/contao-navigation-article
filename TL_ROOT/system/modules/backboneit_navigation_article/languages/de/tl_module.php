@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_legend']
+$GLOBALS['TL_LANG']['tl_module']['bbit_navi_art_legend']
 	= 'Navigationsartikel';
 
 $GLOBALS['TL_LANG']['tl_module']['bbit_navi_art_enable']
