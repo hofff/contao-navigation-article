@@ -19,7 +19,7 @@
 	},
 	"require": {
 		"php": ">=5.3",
-		"contao/core": ">=2.11,<4",
+		"contao/core": ">=2.11,<3",
 		"backboneit/contao-navigation": ">=1.5,<2"
 	},
 	"replace": {
