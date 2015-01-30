@@ -1,37 +1,40 @@
 {
-	"name": "backboneit/contao-navigation-article",
-	"description": "Integrate articles into backboneIT navigation module for Contao CMS",
-	"keywords": [ "navigation", "article", "page", "contao" ],
-	"type": "contao-module",
-	"license": "LGPL-3.0+",
-	"authors": [
-		{
-			"name": "Oliver Hoff",
-			"email": "oliver@hofff.com",
-			"homepage": "http://hofff.com/",
-			"role": "Developer"
+	"name" : "backboneit/contao-navigation-article",
+	"description" : "Integrate articles into backboneIT navigation module for Contao CMS",
+	"keywords" : [
+		"navigation",
+		"article",
+		"page",
+		"contao"
+	],
+	"type" : "contao-module",
+	"license" : "LGPL-3.0+",
+	"authors" : [{
+			"name" : "Oliver Hoff",
+			"email" : "oliver@hofff.com",
+			"homepage" : "http://hofff.com/",
+			"role" : "Developer"
 		}
 	],
-	"support": {
-		"issues": "https://github.com/backbone87/contao-navigation-article/issues",
-		"irc": "irc://irc.freenode.org/contao.dev",
-		"source": "https://github.com/backbone87/contao-navigation-article"
+	"support" : {
+		"issues" : "https://github.com/backbone87/contao-navigation-article/issues",
+		"irc" : "irc://irc.freenode.org/contao.dev",
+		"source" : "https://github.com/backbone87/contao-navigation-article"
 	},
-	"require": {
-		"php": ">=5.3",
-		"contao/core": ">=2.11,<3",
-		"backboneit/contao-navigation": ">=1.5,<2"
+	"require" : {
+		"php" : ">=5.3",
+		"contao/core" : ">=2.11,<4",
+		"backboneit/contao-navigation" : "~1.7",
+		"backboneit/contao-mod-article" : "~2.4"
 	},
-	"replace": {
-		"contao-legacy/backboneit_navigation_article": "*"
+	"replace" : {
+		"contao-legacy/backboneit_navigation_article" : "*"
 	},
-	"extra": {
-		"contao": {
-			"sources": {
-				"TL_ROOT/system/modules/backboneit_navigation_article": "system/modules/backboneit_navigation_article"
+	"extra" : {
+		"contao" : {
+			"sources" : {
+				"TL_ROOT/system/modules/backboneit_navigation_article" : "system/modules/backboneit_navigation_article"
 			}
-		},
-		"branch-alias": {
 		}
 	}
 }
