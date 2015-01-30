@@ -28,7 +28,7 @@
 		"backboneit/contao-mod-article" : "~2.4"
 	},
 	"replace" : {
-		"contao-legacy/backboneit_navigation_article" : "*"
+		"contao-legacy/backboneit_navigation_article" : "self.version"
 	},
 	"extra" : {
 		"contao" : {
