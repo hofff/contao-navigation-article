@@ -1,5 +1,5 @@
 {
-	"name" : "backboneit/contao-navigation-article",
+	"name" : "hofff/contao-navigation-article",
 	"description" : "Integrate articles into backboneIT navigation module for Contao CMS",
 	"keywords" : [
 		"navigation",
@@ -17,9 +17,9 @@
 		}
 	],
 	"support" : {
-		"issues" : "https://github.com/backbone87/contao-navigation-article/issues",
+		"issues" : "https://github.com/hofff/contao-navigation-article/issues",
 		"irc" : "irc://irc.freenode.org/contao.dev",
-		"source" : "https://github.com/backbone87/contao-navigation-article"
+		"source" : "https://github.com/hofff/contao-navigation-article"
 	},
 	"require" : {
 		"php" : ">=5.3",
@@ -28,6 +28,7 @@
 		"backboneit/contao-mod-article" : "~2.4"
 	},
 	"replace" : {
+		"backboneit/contao-navigation-article" : "self.version",
 		"contao-legacy/backboneit_navigation_article" : "self.version"
 	},
 	"extra" : {
