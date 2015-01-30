@@ -34,7 +34,7 @@
 	"extra" : {
 		"contao" : {
 			"sources" : {
-				"TL_ROOT/system/modules/backboneit_navigation_article" : "system/modules/backboneit_navigation_article"
+				"TL_ROOT/system/modules/hofff_navigation_article" : "system/modules/hofff_navigation_article"
 			}
 		}
 	}
