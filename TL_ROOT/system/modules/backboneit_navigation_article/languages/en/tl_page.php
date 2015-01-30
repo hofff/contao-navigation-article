@@ -16,6 +16,3 @@ $GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_nosearch_short']
 	= array('S', 'Exclude from Contao search.');
 $GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_container_short']
 	= array('C', 'Addtionally render the article container insteadof just the content elements.');
-
-$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_errDuplicate']
-	= 'Only one article is permitted for each module.';

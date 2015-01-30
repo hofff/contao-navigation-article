@@ -11,7 +11,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = array(
 	'inputType'		=> 'multiColumnWizard',
 	'eval'			=> array(
 		'doNotSaveEmpty'=> true,
-		'buttons'		=> array('up' => false, 'down' => false),
+// 		'buttons'		=> array('up' => false, 'down' => false),
 		'columnFields'	=> array(
 			'module' => array(
 				'label'		=> &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_module'],

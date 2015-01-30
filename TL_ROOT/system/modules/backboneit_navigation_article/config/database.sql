@@ -10,6 +10,8 @@
 CREATE TABLE `tl_bbit_navi_art` (
 
   `page` int(10) unsigned NOT NULL default '0',
+  `sorting` int(10) unsigned NOT NULL default '0',
+
   `module` int(10) unsigned NOT NULL default '0',
   `article` int(10) unsigned NOT NULL default '0',
 
@@ -17,7 +19,7 @@ CREATE TABLE `tl_bbit_navi_art` (
   `nosearch` char(1) NOT NULL default '',
   `container` char(1) NOT NULL default '',
 
-  PRIMARY KEY  (`page`, `module`),
+  PRIMARY KEY  (`page`, `sorting`),
   KEY `module` (`module`),
   KEY `article` (`article`),
 

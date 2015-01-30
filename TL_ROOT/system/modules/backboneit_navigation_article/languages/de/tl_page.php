@@ -16,6 +16,3 @@ $GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_nosearch_short']
 	= array('S', 'Schließt dieses Artikelmodul von der Contao-Suche aus.');
 $GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_container_short']
 	= array('C', 'Gibt zusätzlich den Artikelcontainer aus und nicht nur die Inhaltselemente des Artikels.');
-
-$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_errDuplicate']
-	= 'Jedem Modul kann jeweils nur ein Artikel zugewiesen werden.';

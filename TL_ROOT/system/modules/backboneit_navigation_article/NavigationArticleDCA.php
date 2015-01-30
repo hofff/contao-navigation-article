@@ -49,22 +49,16 @@ class NavigationArticleDCA extends Backend {
 
 	public function saveForPage($arrRows, $objDC) {
 		$arrRows = deserialize($arrRows);
-		$intCount = count($arrRows);
 		$this->arrSets[$objDC->id] = array();
 
-		foreach($arrRows as $arrRow) {
+		foreach(array_values($arrRows) as $i => $arrRow) {
 			$arrRow['page'] = $objDC->id;
+			$arrRow['sorting'] = $i;
 			$arrRow['module'] = intval($arrRow['module']);
 			$arrRow['article'] = intval($arrRow['article']);
 			if($arrRow['module'] > 0 && $arrRow['article'] > 0) {
-				$this->arrSets[$objDC->id][$arrRow['module']] = $arrRow;
-			} else {
-				$intCount--;
+				$this->arrSets[$objDC->id][] = $arrRow;
 			}
-		}
-
-		if($intCount != count($this->arrSets[$objDC->id])) {
-			throw new Exception($GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_errDuplicate']);
 		}
 
 		return null;
