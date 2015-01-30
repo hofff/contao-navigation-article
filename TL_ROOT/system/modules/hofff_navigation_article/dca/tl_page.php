@@ -11,7 +11,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = array(
 	'inputType'		=> 'multiColumnWizard',
 	'eval'			=> array(
 		'doNotSaveEmpty'=> true,
-// 		'buttons'		=> array('up' => false, 'down' => false),
 		'columnFields'	=> array(
 			'module' => array(
 				'label'		=> &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_module'],
@@ -20,7 +19,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = array(
 				'eval'		=> array(
 					'includeBlankOption'=> true,
 					'chosen'		=> true,
-					'style'			=> 'width: 190px;'
+					'style'			=> 'width: 180px;'
 				),
 				'wizard'			=> array(
 					array('NavigationArticleDCA', 'editModule')
@@ -33,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = array(
 				'eval'		=> array(
 					'includeBlankOption'=> true,
 					'chosen'		=> true,
-					'style'			=> 'width: 190px;'
+					'style'			=> 'width: 180px;'
 				),
 				'wizard'			=> array(
 					array('IncludeArticleDCA', 'editArticle')
@@ -46,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = array(
 				'eval'		=> array(
 					'multiple'		=> true,
 					'size'			=> 2,
-					'style'			=> 'width: 60px;'
+					'style'			=> 'width: 55px;'
 				)
 			),
 			'nosearch' => array(
