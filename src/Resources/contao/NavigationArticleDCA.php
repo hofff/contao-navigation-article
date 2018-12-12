@@ -1,97 +1,113 @@
 <?php
 
-class NavigationArticleDCA extends Backend {
+class NavigationArticleDCA extends Backend
+{
 
-	public function getModules($objDC) {
-		$objModules = Database::getInstance()->prepare(
-			'SELECT	id, name
+    public function getModules($objDC)
+    {
+        $objModules = Database::getInstance()->prepare(
+            'SELECT	id, name
 			FROM	tl_module'
-		)->execute();
+        )->execute();
 
-		$arrModules = array();
-		while($objModules->next()) {
-			$arrModules[$objModules->id] = $objModules->name;
-		}
-		return $arrModules;
-	}
+        $arrModules = [];
+        while ($objModules->next()) {
+            $arrModules[$objModules->id] = $objModules->name;
+        }
 
-	public function editModule($objDC, $objWidget = null) {
-		if(is_object($objWidget)) { // comes from MCW
-			$intModuleID = $objWidget->value;
-		} else {
-			$intModuleID = $objDC->value;
-		}
+        return $arrModules;
+    }
 
-		if($intModuleID < 1) {
-			return '';
-		}
+    public function editModule($objDC, $objWidget = null)
+    {
+        if (is_object($objWidget)) { // comes from MCW
+            $intModuleID = $objWidget->value;
+        } else {
+            $intModuleID = $objDC->value;
+        }
 
-		return sprintf(
-			' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=%s" title="%s" style="padding-left:3px;">%s</a>',
-			$intArticleID,
-			sprintf(specialchars($GLOBALS['TL_LANG']['tl_page']['editalias'][1]), $intArticleID),
-			$this->generateImage('alias.gif', $GLOBALS['TL_LANG']['tl_page']['editalias'][0], 'style="vertical-align:top;"')
-		);
-	}
+        if ($intModuleID < 1) {
+            return '';
+        }
 
-	public function loadForPage($arrRows, $objDC) {
-		return Database::getInstance()->prepare(
-			'SELECT	j.*
+        return sprintf(
+            ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=%s" title="%s" style="padding-left:3px;">%s</a>',
+            $intArticleID,
+            sprintf(specialchars($GLOBALS['TL_LANG']['tl_page']['editalias'][1]), $intArticleID),
+            $this->generateImage(
+                'alias.gif',
+                $GLOBALS['TL_LANG']['tl_page']['editalias'][0],
+                'style="vertical-align:top;"'
+            )
+        );
+    }
+
+    public function loadForPage($arrRows, $objDC)
+    {
+        return Database::getInstance()->prepare(
+            'SELECT	j.*
 			FROM	tl_bbit_navi_art AS j
 			JOIN	tl_module AS m ON m.id = j.module
 			JOIN	tl_theme AS t ON t.id = m.pid
 			WHERE	j.page = ?
 			ORDER BY t.name, m.name'
-		)->execute($objDC->id)->fetchAllAssoc();
-	}
+        )->execute($objDC->id)->fetchAllAssoc();
+    }
 
-	protected $arrSets;
+    protected $arrSets;
 
-	public function saveForPage($arrRows, $objDC) {
-		$arrRows = deserialize($arrRows);
-		$this->arrSets[$objDC->id] = array();
+    public function saveForPage($arrRows, $objDC)
+    {
+        $arrRows                   = deserialize($arrRows);
+        $this->arrSets[$objDC->id] = [];
 
-		foreach(array_values($arrRows) as $i => $arrRow) {
-			$arrRow['page'] = $objDC->id;
-			$arrRow['sorting'] = $i;
-			$arrRow['module'] = intval($arrRow['module']);
-			$arrRow['article'] = intval($arrRow['article']);
-			if($arrRow['module'] > 0 && $arrRow['article'] > 0) {
-				$this->arrSets[$objDC->id][] = $arrRow;
-			}
-		}
+        foreach (array_values($arrRows) as $i => $arrRow) {
+            $arrRow['page']    = $objDC->id;
+            $arrRow['sorting'] = $i;
+            $arrRow['module']  = intval($arrRow['module']);
+            $arrRow['article'] = intval($arrRow['article']);
+            if ($arrRow['module'] > 0 && $arrRow['article'] > 0) {
+                $this->arrSets[$objDC->id][] = $arrRow;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public function submitPage($objDC) {
-		if(!isset($this->arrSets[$objDC->id])) {
-			return;
-		}
+    public function submitPage($objDC)
+    {
+        if (!isset($this->arrSets[$objDC->id])) {
+            return;
+        }
 
-		$objDB = Database::getInstance();
-		$objDB->prepare(
-			'DELETE FROM tl_bbit_navi_art WHERE page = ?'
-		)->execute($objDC->id);
+        $objDB = Database::getInstance();
+        $objDB->prepare(
+            'DELETE FROM tl_bbit_navi_art WHERE page = ?'
+        )->execute($objDC->id);
 
-		if($this->arrSets[$objDC->id]) foreach($this->arrSets[$objDC->id] as $arrSet) {
-			$objDB->prepare(
-				'INSERT INTO tl_bbit_navi_art %s'
-			)->set($arrSet)->execute();
-		}
-	}
+        if ($this->arrSets[$objDC->id]) {
+            foreach ($this->arrSets[$objDC->id] as $arrSet) {
+                $objDB->prepare(
+                    'INSERT INTO tl_bbit_navi_art %s'
+                )->set($arrSet)->execute();
+            }
+        }
+    }
 
-	protected function __construct() {
-		parent::__construct();
-	}
+    protected function __construct()
+    {
+        parent::__construct();
+    }
 
-	private static $objInstance;
+    private static $objInstance;
 
-	public static function getInstance() {
-		if(!isset(self::$objInstance))
-			self::$objInstance = new self();
+    public static function getInstance()
+    {
+        if (!isset(self::$objInstance)) {
+            self::$objInstance = new self();
+        }
 
-		return self::$objInstance;
-	}
+        return self::$objInstance;
+    }
 
 }
