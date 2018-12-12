@@ -1,41 +1,52 @@
 {
-	"name" : "hofff/contao-navigation-article",
-	"description" : "Integrate articles into backboneIT navigation module for Contao CMS",
-	"keywords" : [
-		"navigation",
-		"article",
-		"page",
-		"contao"
-	],
-	"type" : "contao-module",
-	"license" : "LGPL-3.0+",
-	"authors" : [{
-			"name" : "Oliver Hoff",
-			"email" : "oliver@hofff.com",
-			"homepage" : "http://hofff.com/",
-			"role" : "Developer"
-		}
-	],
-	"support" : {
-		"issues" : "https://github.com/hofff/contao-navigation-article/issues",
-		"irc" : "irc://irc.freenode.org/contao.dev",
-		"source" : "https://github.com/hofff/contao-navigation-article"
-	},
-	"require" : {
-		"php" : ">=5.3",
-		"contao/core" : ">=2.11,<4",
-		"backboneit/contao-navigation" : "~1.7",
-		"backboneit/contao-mod-article" : "~2.4"
-	},
-	"replace" : {
-		"backboneit/contao-navigation-article" : "self.version",
-		"contao-legacy/backboneit_navigation_article" : "self.version"
-	},
-	"extra" : {
-		"contao" : {
-			"sources" : {
-				"TL_ROOT/system/modules/hofff_navigation_article" : "system/modules/hofff_navigation_article"
-			}
-		}
-	}
+  "name": "hofff/contao-navigation-article",
+  "description": "Integrate articles into backboneIT navigation module for Contao CMS",
+  "keywords": [
+    "navigation",
+    "article",
+    "page",
+    "contao"
+  ],
+  "type": "contao-module",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Oliver Hoff",
+      "email": "oliver@hofff.com",
+      "homepage": "http://hofff.com/",
+      "role": "Developer"
+    },
+    {
+      "name": "David Molineus",
+      "email": "david@hofff.com",
+      "homepage": "https://hofff.com/",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/hofff/contao-navigation-article/issues",
+    "irc": "irc://irc.freenode.org/contao.dev",
+    "source": "https://github.com/hofff/contao-navigation-article"
+  },
+  "require": {
+    "php": ">=7.1",
+    "contao/core-bundle": "^4.4",
+    "backboneit/contao-navigation": "~1.8",
+    "hofff/contao-content": "~2.1 || ^3.0",
+    "symfony/http-kernel": "^3.3 || ^4.0",
+    "symfony/config": "^3.3 || ^4.0",
+    "symfony/dependency-injection": "^3.3 || ^4.0"
+  },
+  "replace": {
+    "backboneit/contao-navigation-article": "self.version",
+    "contao-legacy/backboneit_navigation_article": "self.version"
+  },
+  "autoload": {
+    "psr-4": {
+      "Hofff\\Contao\\NavigationArticle\\": "src/"
+    }
+  },
+  "extra": {
+    "contao-manager-plugin": "Hofff\\Contao\\NavigationArticle\\ContaoManager\\Plugin"
+  }
 }
