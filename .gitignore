@@ -3,6 +3,7 @@
 !/TL_ROOT/
 !/dev/
 !/ext/
+!/src/
 !/publish/
 !/build.xml
 !/README.md
