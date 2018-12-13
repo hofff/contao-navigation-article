@@ -1,12 +1,15 @@
 <?php
 
-$GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'][] = ['NavigationArticleDCA', 'submitPage'];
+use Hofff\Contao\NavigationArticle\EventListener\NavigationArticleDCAListener;
+
+$GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'][] = [NavigationArticleDCAListener::class, 'submitPage'];
 
 foreach ($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strSelector => &$strPalette) {
-    if ($strSelector != '__selector__') {
+    if ($strSelector !== '__selector__') {
         $strPalette .= ';{bbit_navi_art_legend},bbit_navi_art_articles';
     }
 }
+unset($strPalette);
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
     'label'         => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_articles'],
@@ -17,20 +20,20 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
             'module'    => [
                 'label'            => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_module'],
                 'inputType'        => 'select',
-                'options_callback' => ['NavigationArticleDCA', 'getModules'],
+                'options_callback' => [NavigationArticleDCAListener::class, 'getModules'],
                 'eval'             => [
                     'includeBlankOption' => true,
                     'chosen'             => true,
                     'style'              => 'width: 180px;',
                 ],
                 'wizard'           => [
-                    ['NavigationArticleDCA', 'editModule'],
+                    [NavigationArticleDCAListener::class, 'editModule'],
                 ],
             ],
             'article'   => [
                 'label'            => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_article'],
                 'inputType'        => 'select',
-                'options_callback' => ['IncludeArticleDCA', 'getArticles'],
+                'options_callback' => [NavigationArticleDCAListener::class, 'getArticles'],
                 'eval'             => [
                     'includeBlankOption' => true,
                     'chosen'             => true,
@@ -63,12 +66,11 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
                 ],
             ],
         ],
-// 		'tl_class'			=> 'clr',
     ],
     'load_callback' => [
-        ['NavigationArticleDCA', 'loadForPage'],
+        [NavigationArticleDCAListener::class, 'loadForPage'],
     ],
     'save_callback' => [
-        ['NavigationArticleDCA', 'saveForPage'],
+        [NavigationArticleDCAListener::class, 'saveForPage'],
     ],
 ];
