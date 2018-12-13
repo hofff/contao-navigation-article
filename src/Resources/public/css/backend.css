@@ -1,0 +1,29 @@
+.hofff-navi-art-articles .multicolumnwizard.tl_modulewizard {
+    max-width: 100%;
+}
+
+.hofff-navi-art-articles .multicolumnwizard .tl_select {
+    width: 100%;
+}
+
+.hofff-navi-art-articles .multicolumnwizard table {
+    table-layout:fixed
+}
+
+.hofff-navi-art-articles .multicolumnwizard td:nth-child(1),
+.hofff-navi-art-articles .multicolumnwizard td:nth-child(2) {
+    width: 30%;
+}
+
+.hofff-navi-art-articles .multicolumnwizard td:nth-child(3) label {
+    display: none;
+}
+
+.hofff-navi-art-articles .multicolumnwizard td:nth-child(3) .tl_text_2 {
+    width: 49%;
+    float: left;
+}
+
+.hofff-navi-art-articles .multicolumnwizard td:last-child {
+    width: 100px;
+}
