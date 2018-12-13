@@ -52,6 +52,10 @@
     }
   },
   "extra": {
-    "contao-manager-plugin": "Hofff\\Contao\\NavigationArticle\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "Hofff\\Contao\\NavigationArticle\\ContaoManager\\Plugin",
+    "branch-alias": {
+      "dev-1.x": "1.0.x-dev",
+      "dev-2.x": "2.0.x-dev"
+    }
   }
 }
