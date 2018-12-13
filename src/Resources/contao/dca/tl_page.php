@@ -15,6 +15,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
     'label'         => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_articles'],
     'inputType'     => 'multiColumnWizard',
     'eval'          => [
+        'tl_class'          => 'hofff-navi-art-articles',
         'doNotSaveEmpty' => true,
         'columnFields'   => [
             'module'    => [
@@ -24,10 +25,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
                 'eval'             => [
                     'includeBlankOption' => true,
                     'chosen'             => true,
-                    'style'              => 'width: 180px;',
-                ],
-                'wizard'           => [
-                    [NavigationArticleDCAListener::class, 'editModule'],
+                    'style'              => 'width:100%',
                 ],
             ],
             'article'   => [
@@ -37,10 +35,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
                 'eval'             => [
                     'includeBlankOption' => true,
                     'chosen'             => true,
-                    'style'              => 'width: 180px;',
-                ],
-                'wizard'           => [
-                    ['IncludeArticleDCA', 'editArticle'],
+                    'style'              => 'width:100%',
                 ],
             ],
             'cssID'     => [
@@ -50,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
                 'eval'      => [
                     'multiple' => true,
                     'size'     => 2,
-                    'style'    => 'width: 55px;',
+                    'style'    => 'width:49%',
                 ],
             ],
             'nosearch'  => [

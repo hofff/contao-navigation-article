@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\NavigationArticle\EventListener;
 
-use Contao\Image;
+use function array_merge;
+use function array_unique;
+use Contao\BackendUser;
+use Contao\Database;
+use Contao\Input;
+use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use PDO;
 
@@ -23,38 +29,105 @@ final class NavigationArticleDCAListener
 
     public function getModules(): array
     {
-        $statement = $this->connection->query('SELECT id, name FROM tl_module');
-        $options   = [];
+        $query = <<< 'SQL'
+SELECT 
+  m.id, m.name, t.name AS theme, m.pid
+FROM
+  tl_module m
+INNER JOIN
+  tl_theme t
+  ON
+    t.id = m.pid
+WHERE 
+  m.type = :type
+ORDER BY 
+  m.name
+SQL;
 
-        while ($objModules = $statement->fetch(PDO::FETCH_OBJ)) {
-            $options[$objModules->id] = $objModules->name;
+        $statement = $this->connection->prepare($query);
+        $statement->bindValue('type', 'backboneit_navigation_menu');
+        $statement->execute();
+
+        $options = [];
+
+        while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
+            $theme                     = sprintf('%s [%s]', $row->theme, $row->pid);
+            $options[$theme][$row->id] = sprintf('%s [%s]', $row->name, $row->id);
         }
 
         return $options;
     }
 
-    public function editModule($objDC, $objWidget = null): string
+    public function getArticles($objDC): array
     {
-        if (is_object($objWidget)) { // comes from MCW
-            $moduleId = (int) $objWidget->value;
+        $arrPids    = [];
+        $arrArticle = [];
+        $arrRoot    = [];
+        $intPid     = $objDC->activeRecord->pid;
+        $database   = Database::getInstance();
+        $user       = BackendUser::getInstance();
+
+        if (Input::get('act') === 'overrideAll') {
+            $intPid = Input::get('id');
+        }
+
+        // Limit pages to the website root
+        $objArticle = $database->prepare("SELECT pid FROM tl_article WHERE id=?")
+            ->limit(1)
+            ->execute($intPid);
+
+        if ($objArticle->numRows) {
+            $objPage = PageModel::findWithDetails($objArticle->pid);
+            $arrRoot = $database->getChildRecords($objPage->rootId, 'tl_page');
+            array_unshift($arrRoot, $objPage->rootId);
+        }
+
+        unset($objArticle);
+
+        $query = $this->connection->createQueryBuilder()
+            ->select('a.id, a.pid, a.title, a.inColumn, p.title AS parent')
+            ->from('tl_article', 'a')
+            ->leftJoin('a', 'tl_page', 'p', 'p.id=a.pid')
+            ->andWhere('a.hofff_content_hide=:active')
+            ->setParameter('active', '1')
+            ->orderBy('parent, a.sorting');
+
+        // Limit pages to the user's pagemounts
+        if ($user->isAdmin) {
+            if ($arrRoot) {
+                $query->andWhere('a.pid IN(:root)');
+                $query->setParameter('root', array_unique($arrRoot), Connection::PARAM_INT_ARRAY);
+            }
         } else {
-            $moduleId = (int) $objDC->value;
+            foreach ($user->pagemounts as $id) {
+                if (!\in_array($id, $arrRoot)) {
+                    continue;
+                }
+
+                $arrPids[] = [$id];
+                $arrPids[] = $database->getChildRecords($id, 'tl_page');
+            }
+
+            $arrPids = array_unique(array_merge(...$arrPids));
+
+            if (empty($arrPids)) {
+                return $arrArticle;
+            }
+
+            $query->andWhere('a.pid IN(:root)');
+            $query->setParameter('root', $arrPids, Connection::PARAM_INT_ARRAY);
         }
 
-        if ($moduleId < 1) {
-            return '';
+        // Edit the result
+        $statement = $query->execute();
+        System::loadLanguageFile('tl_article');
+
+        while ($objArticle = $statement->fetch(PDO::FETCH_OBJ)) {
+            $key                               = $objArticle->parent . ' (ID ' . $objArticle->pid . ')';
+            $arrArticle[$key][$objArticle->id] = $objArticle->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ?: $objArticle->inColumn) . ', ID ' . $objArticle->id . ')';
         }
 
-        return sprintf(
-            ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=%s" title="%s" style="padding-left:3px;">%s</a>',
-            $moduleId,
-            sprintf(specialchars($GLOBALS['TL_LANG']['tl_page']['editalias'][1]), $moduleId),
-            Image::getHtml(
-                'alias.gif',
-                $GLOBALS['TL_LANG']['tl_page']['editalias'][0],
-                'style="vertical-align:top;"'
-            )
-        );
+        return $arrArticle;
     }
 
     public function loadForPage($arrRows, $objDC)
