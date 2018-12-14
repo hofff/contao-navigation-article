@@ -18,6 +18,13 @@ final class HofffContaoNavigationArticleExtension extends Extension
             new FileLocator(__DIR__ . '/../Resources/config')
         );
 
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        $container->setParameter(
+            'hofff_contao_navigation_article.reference_articles_only',
+            $config['reference_articles_only']
+        );
+
         $loader->load('listener.xml');
     }
 }

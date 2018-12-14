@@ -22,9 +22,17 @@ final class NavigationArticleDCAListener
 
     private $sets;
 
-    public function __construct(Connection $connection)
+    /**
+     * If true only reference articles (hofff_content_hide) are provides as options.
+     *
+     * @var bool
+     */
+    private $referenceArticlesOnly;
+
+    public function __construct(Connection $connection, bool $referenceArticlesOnly)
     {
-        $this->connection = $connection;
+        $this->connection            = $connection;
+        $this->referenceArticlesOnly = $referenceArticlesOnly;
     }
 
     public function getModules(): array
@@ -88,9 +96,13 @@ SQL;
             ->select('a.id, a.pid, a.title, a.inColumn, p.title AS parent')
             ->from('tl_article', 'a')
             ->leftJoin('a', 'tl_page', 'p', 'p.id=a.pid')
-            ->andWhere('a.hofff_content_hide=:active')
-            ->setParameter('active', '1')
             ->orderBy('parent, a.sorting');
+
+        if ($this->referenceArticlesOnly) {
+            $query
+                ->andWhere('a.hofff_content_hide=:active')
+                ->setParameter('active', '1');
+        }
 
         // Limit pages to the user's pagemounts
         if ($user->isAdmin) {

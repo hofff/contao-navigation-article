@@ -14,6 +14,7 @@
 
         <service id="Hofff\Contao\NavigationArticle\EventListener\NavigationArticleDCAListener" public="true">
             <argument type="service" id="database_connection" />
+            <argument>%hofff_contao_navigation_article.reference_articles_only%</argument>
         </service>
     </services>
 </container>
