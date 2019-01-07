@@ -6,20 +6,20 @@ $GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'][] = [NavigationArti
 
 foreach ($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strSelector => &$strPalette) {
     if ($strSelector !== '__selector__') {
-        $strPalette .= ';{bbit_navi_art_legend},bbit_navi_art_articles';
+        $strPalette .= ';{hofff_navi_art_legend},hofff_navi_art_articles';
     }
 }
 unset($strPalette);
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
-    'label'         => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_articles'],
+$GLOBALS['TL_DCA']['tl_page']['fields']['hofff_navi_art_articles'] = [
+    'label'         => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_articles'],
     'inputType'     => 'multiColumnWizard',
     'eval'          => [
         'tl_class'          => 'hofff-navi-art-articles',
         'doNotSaveEmpty' => true,
         'columnFields'   => [
             'module'    => [
-                'label'            => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_module'],
+                'label'            => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_module'],
                 'inputType'        => 'select',
                 'options_callback' => [NavigationArticleDCAListener::class, 'getModules'],
                 'eval'             => [
@@ -29,7 +29,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
                 ],
             ],
             'article'   => [
-                'label'            => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_article'],
+                'label'            => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_article'],
                 'inputType'        => 'select',
                 'options_callback' => [NavigationArticleDCAListener::class, 'getArticles'],
                 'eval'             => [
@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
                 ],
             ],
             'cssID'     => [
-                'label'     => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_cssID'],
+                'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_cssID'],
                 'exclude'   => true,
                 'inputType' => 'text',
                 'eval'      => [
@@ -49,13 +49,13 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['bbit_navi_art_articles'] = [
                 ],
             ],
             'nosearch'  => [
-                'label'     => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_nosearch_short'],
+                'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_nosearch_short'],
                 'inputType' => 'checkbox',
                 'eval'      => [
                 ],
             ],
             'container' => [
-                'label'     => &$GLOBALS['TL_LANG']['tl_page']['bbit_navi_art_container_short'],
+                'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_container_short'],
                 'inputType' => 'checkbox',
                 'eval'      => [
                 ],

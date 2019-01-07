@@ -146,7 +146,7 @@ SQL;
     {
         $statement = $this->connection->prepare(
             'SELECT	j.*
-			FROM	tl_bbit_navi_art AS j
+			FROM	tl_hofff_navi_art AS j
 			JOIN	tl_module AS m ON m.id = j.module
 			JOIN	tl_theme AS t ON t.id = m.pid
 			WHERE	j.page = :page
@@ -184,7 +184,7 @@ SQL;
             return;
         }
 
-        $statement = $this->connection->prepare('DELETE FROM tl_bbit_navi_art WHERE page = :page');
+        $statement = $this->connection->prepare('DELETE FROM tl_hofff_navi_art WHERE page = :page');
         $statement->bindValue('page', $objDC->id);
         $statement->execute();
 
@@ -193,7 +193,7 @@ SQL;
         }
 
         foreach ($this->sets[$objDC->id] as $set) {
-            $this->connection->insert('tl_bbit_navi_art', $set);
+            $this->connection->insert('tl_hofff_navi_art', $set);
         }
     }
 }

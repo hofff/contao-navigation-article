@@ -10,7 +10,7 @@
 	<?php echo $item['target']; ?>
 	><?php echo $item['link']; ?></a
 	><?php
-	if($item['bbit_navi_art']) echo str_replace('{{bbit_navi_art}}', $item['subitems'], $item['bbit_navi_art']);
+	if($item['hofff_navi_art']) echo str_replace('{{hofff_navi_art}}', $item['subitems'], $item['hofff_navi_art']);
 	else echo $item['subitems'];
 ?></li>
 <?php endforeach; ?>

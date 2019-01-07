@@ -7,7 +7,7 @@
 -- *                                                      *
 -- ********************************************************
 
-CREATE TABLE `tl_bbit_navi_art` (
+CREATE TABLE `tl_hofff_navi_art` (
 
   `page` int(10) unsigned NOT NULL default '0',
   `sorting` int(10) unsigned NOT NULL default '0',
@@ -28,6 +28,6 @@ CREATE TABLE `tl_bbit_navi_art` (
 
 CREATE TABLE `tl_module` (
 
-  `bbit_navi_art_enable` char(1) NOT NULL default '',
+  `hofff_navi_art_enable` char(1) NOT NULL default '',
 
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

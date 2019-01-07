@@ -63,10 +63,10 @@ final class NavigationArticleListener
                 $renderer->addCSSClasses($article['cssID'][1]);
             }
 
-            $page['bbit_navi_arts'][] = $renderer->render();
+            $page['hofff_navi_arts'][] = $renderer->render();
         }
 
-        $page['bbit_navi_art'] = implode('', $page['bbit_navi_arts']);
+        $page['hofff_navi_art'] = implode('', $page['hofff_navi_arts']);
     }
 
     private function getNavigationArticles(int $moduleId, int $pageId): array
@@ -84,7 +84,7 @@ final class NavigationArticleListener
 
     private function fetchNavigationArticlesForModule(int $moduleId): array
     {
-        $query     = 'SELECT * FROM tl_bbit_navi_art WHERE module = :module ORDER BY sorting';
+        $query     = 'SELECT * FROM tl_hofff_navi_art WHERE module = :module ORDER BY sorting';
         $statement = $this->connection->prepare($query);
         $statement->bindValue('module', $moduleId);
         $statement->execute();
