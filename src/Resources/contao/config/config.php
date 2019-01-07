@@ -14,7 +14,7 @@ $GLOBALS['BE_MOD']['design']['page']['stylesheet'][] = 'bundles/hofffcontaonavig
  * Hooks
  */
 
-$GLOBALS['TL_HOOKS']['hofff_navi_item'][] = [
+$GLOBALS['TL_HOOKS']['bbit_navi_item'][] = [
     \Hofff\Contao\NavigationArticle\EventListener\NavigationArticleListener::class,
     '__invoke',
 ];
