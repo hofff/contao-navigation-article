@@ -50,17 +50,15 @@ final class NavigationArticleListener
                 continue;
             }
 
-            $article['cssID'] = StringUtil::deserialize($article['cssID'], true);
-
             $renderer = new ArticleRenderer();
             $renderer->setArticle($models[$article['article']]);
             $renderer->setRenderContainer((bool) $article['container']);
             $renderer->setExcludeFromSearch((bool) $article['nosearch']);
             $renderer->setColumn(null);
-            $renderer->setCSSID($article['cssID'][0] ?? '');
+            $renderer->setCSSID($article['cssId']);
 
-            if (isset($article['cssID'][1])) {
-                $renderer->addCSSClasses($article['cssID'][1]);
+            if (isset($article['cssClass'])) {
+                $renderer->addCSSClasses($article['cssClass']);
             }
 
             $page['hofff_navi_arts'][] = $renderer->render();

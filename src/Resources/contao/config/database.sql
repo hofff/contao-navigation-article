@@ -15,7 +15,8 @@ CREATE TABLE `tl_hofff_navi_art` (
   `module` int(10) unsigned NOT NULL default '0',
   `article` int(10) unsigned NOT NULL default '0',
 
-  `cssID` varchar(255) NOT NULL default '',
+  `cssId` varchar(255) NOT NULL default '',
+  `cssClass` varchar(255) NOT NULL default '',
   `nosearch` char(1) NOT NULL default '',
   `container` char(1) NOT NULL default '',
 

@@ -38,15 +38,17 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hofff_navi_art_articles'] = [
                     'style'              => 'width:100%',
                 ],
             ],
-            'cssID'     => [
-                'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_cssID'],
+            'cssId'     => [
+                'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_cssId'],
                 'exclude'   => true,
                 'inputType' => 'text',
-                'eval'      => [
-                    'multiple' => true,
-                    'size'     => 2,
-                    'style'    => 'width:49%',
-                ],
+                'eval'      => [],
+            ],
+            'cssClass'     => [
+                'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_cssClass'],
+                'exclude'   => true,
+                'inputType' => 'text',
+                'eval'      => [],
             ],
             'nosearch'  => [
                 'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_nosearch_short'],

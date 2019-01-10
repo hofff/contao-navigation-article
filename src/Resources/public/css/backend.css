@@ -19,11 +19,6 @@
     display: none;
 }
 
-.hofff-navi-art-articles .multicolumnwizard td:nth-child(3) .tl_text_2 {
-    width: 49%;
-    float: left;
-}
-
 .hofff-navi-art-articles .multicolumnwizard td:last-child {
     width: 100px;
 }
