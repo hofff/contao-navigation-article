@@ -65,6 +65,10 @@ final class NavigationArticleListener
         }
 
         $page['hofff_navi_art'] = implode('', $page['hofff_navi_arts']);
+
+        $data        = $navi->cssID;
+        $data[1]     = trim($data[1] . ' hofff-navi-art');
+        $navi->cssID = $data;
     }
 
     private function getNavigationArticles(int $moduleId, int $pageId): array
