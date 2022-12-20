@@ -17,8 +17,8 @@ article.**
 Configuration
 -------------
 
-By default only articles marked as "reference article" are provided as article options. You can disable it if you want
-to see all all available articles by adding following configuration to your `config.yml`:
+By default, only articles marked as "reference article" are provided as article options. You can disable it if you want
+to see all available articles by adding following configuration to your `config.yml`:
 
 ```yaml
 hofff_contao_navigation_article:
