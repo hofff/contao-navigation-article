@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $GLOBALS['TL_LANG']['tl_module']['hofff_navi_art_legend'] = 'Navigationsartikel';
 
 $GLOBALS['TL_LANG']['tl_module']['hofff_navi_art_enable'] = [

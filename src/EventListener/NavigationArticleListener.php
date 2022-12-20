@@ -4,36 +4,41 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\NavigationArticle\EventListener;
 
-use function array_map;
-use function array_unique;
 use Contao\ArticleModel;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface as ContaoFramework;
-use Contao\StringUtil;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Renderer\ArticleRenderer;
-use PDO;
+use Hofff\Contao\Navigation\Event\ItemEvent;
+
+use function array_map;
+use function array_unique;
+use function array_values;
+use function implode;
 use function strpos;
+use function trim;
 
 final class NavigationArticleListener
 {
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var ContaoFramework */
-    private $contaoFramework;
+    private ContaoFramework $contaoFramework;
 
-    private $articles = [];
+    /** @var array<int, array<int, list<array<string, mixed>>>> */
+    private array $articles = [];
 
     public function __construct(Connection $connection, ContaoFramework $contaoFramework)
     {
-        $this->connection = $connection;
+        $this->connection      = $connection;
         $this->contaoFramework = $contaoFramework;
     }
 
-    public function __invoke($navi, &$page): void
+    public function __invoke(ItemEvent $event): void
     {
+        $navi = $event->moduleModel();
+        $page = $event->item();
+
         $articles = $this->getNavigationArticles((int) $navi->id, (int) $page['id']);
-        if (!$articles) {
+        if (! $articles) {
             return;
         }
 
@@ -47,7 +52,7 @@ final class NavigationArticleListener
         }
 
         foreach ($articles as $article) {
-            if (!isset($models[$article['article']])) {
+            if (! isset($models[$article['article']])) {
                 continue;
             }
 
@@ -55,7 +60,7 @@ final class NavigationArticleListener
             $renderer->setArticle($models[$article['article']]);
             $renderer->setRenderContainer((bool) $article['container']);
             $renderer->setExcludeFromSearch((bool) $article['nosearch']);
-            $renderer->setColumn(null);
+            $renderer->setColumn('');
             $renderer->setCSSID($article['cssId']);
 
             if (isset($article['cssClass'])) {
@@ -72,45 +77,51 @@ final class NavigationArticleListener
             $data[1]     = trim($data[1] . ' hofff-navi-art');
             $navi->cssID = $data;
         }
+
+        $event->changeItem($page);
     }
 
+    /** @return list<array<string,mixed>> */
     private function getNavigationArticles(int $moduleId, int $pageId): array
     {
-        if (!isset($this->articles[$moduleId])) {
+        if (! isset($this->articles[$moduleId])) {
             $this->articles[$moduleId] = $this->fetchNavigationArticlesForModule($moduleId);
         }
 
         if (isset($this->articles[$moduleId][$pageId])) {
-            return (array) $this->articles[$moduleId][$pageId];
+            return $this->articles[$moduleId][$pageId];
         }
 
         return [];
     }
 
+    /** @return array<int,list<array<string,mixed>>> */
     private function fetchNavigationArticlesForModule(int $moduleId): array
     {
-        $query     = 'SELECT * FROM tl_hofff_navi_art WHERE module = :module ORDER BY sorting';
-        $statement = $this->connection->prepare($query);
-        $statement->bindValue('module', $moduleId);
-        $statement->execute();
-
+        $query    = 'SELECT * FROM tl_hofff_navi_art WHERE module = :module ORDER BY sorting';
+        $result   = $this->connection->executeQuery($query, ['module' => $moduleId]);
         $articles = [];
 
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $articles[$row['page']][] = $row;
+        while ($row = $result->fetchAssociative()) {
+            $articles[(int) $row['page']][] = $row;
         }
 
         return $articles;
     }
 
+    /**
+     * @param list<array<string,mixed>> $articles
+     *
+     * @return list<int>
+     */
     private function getArticleIdsFromConfiguration(array $articles): array
     {
-        return array_unique(
-            array_map(
-                function ($article) {
-                    return $article['article'];
-                },
-                $articles
+        return array_values(
+            array_unique(
+                array_map(
+                    static fn (array $article) => (int) $article['article'],
+                    $articles
+                )
             )
         );
     }

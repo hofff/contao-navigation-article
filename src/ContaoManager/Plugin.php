@@ -12,12 +12,13 @@ use Hofff\Contao\NavigationArticle\HofffContaoNavigationArticleBundle;
 
 final class Plugin implements BundlePluginInterface
 {
+    /** {@inheritDoc} */
     public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create(HofffContaoNavigationArticleBundle::class)
                 ->setLoadAfter([ContaoCoreBundle::class, 'backboneit_navigation'])
-                ->setReplace(['hofff_navigation_article'])
+                ->setReplace(['hofff_navigation_article']),
         ];
     }
 }

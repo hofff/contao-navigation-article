@@ -10,6 +10,7 @@
         <service id="Hofff\Contao\NavigationArticle\EventListener\NavigationArticleListener" public="true">
             <argument type="service" id="database_connection" />
             <argument type="service" id="contao.framework" />
+            <tag name="kernel.event_listener" event="Hofff\Contao\Navigation\Event\ItemEvent"/>
         </service>
 
         <service id="Hofff\Contao\NavigationArticle\EventListener\NavigationArticleDCAListener" public="true">
