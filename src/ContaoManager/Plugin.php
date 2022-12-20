@@ -8,6 +8,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Hofff\Contao\Navigation\HofffContaoNavigationBundle;
 use Hofff\Contao\NavigationArticle\HofffContaoNavigationArticleBundle;
 
 final class Plugin implements BundlePluginInterface
@@ -17,7 +18,7 @@ final class Plugin implements BundlePluginInterface
     {
         return [
             BundleConfig::create(HofffContaoNavigationArticleBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class, 'backboneit_navigation'])
+                ->setLoadAfter([ContaoCoreBundle::class, HofffContaoNavigationBundle::class])
                 ->setReplace(['hofff_navigation_article']),
         ];
     }
