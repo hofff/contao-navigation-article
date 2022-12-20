@@ -13,6 +13,7 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\User;
 use Doctrine\DBAL\Connection;
+use MenAtWork\MultiColumnWizardBundle\Contao\Widgets\MultiColumnWizard;
 
 use function array_merge;
 use function array_unique;
@@ -55,7 +56,7 @@ ORDER BY
   m.name
 SQL;
 
-        $result  = $this->connection->executeQuery($query, ['type' => 'backboneit_navigation_menu']);
+        $result  = $this->connection->executeQuery($query, ['type' => 'hofff_navigation_menu']);
         $options = [];
 
         while ($row = $result->fetchAssociative()) {
@@ -71,12 +72,8 @@ SQL;
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function getArticles(DataContainer $dataContainer): array
+    public function getArticles(MultiColumnWizard $dataContainer): array
     {
-        if (! $dataContainer->activeRecord) {
-            return [];
-        }
-
         $articles  = [];
         $pageId    = $this->getPageId((int) $dataContainer->activeRecord->pid);
         $user      = BackendUser::getInstance();
