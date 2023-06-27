@@ -1,23 +1,23 @@
 <ul class="<?php echo $this->level; ?>">
   <?php foreach ($this->items as $item):
     ?><?php if (empty($item['subitems']) && !empty($item['hofff_navi_art'])) $item['class'] = trim($item['class'] . ' submenu');
-    ?><?php if ($item['isActive']):
-    ?><li class="<?php if($item['isActive']) echo 'active '; if($item['class']) echo $item['class']; ?>"><strong class="<?php if($item['isActive']) echo 'active '; if($item['class']) echo $item['class']; ?>"<?php if (!empty($item['subitems']) || ($item['hofff_navi_art'])) echo ' aria-haspopup="true"'; ?>><span itemprop="name"><?= $item['link'] ?></span></strong><?php if($item['hofff_navi_art']) echo ('<div class="sublevel">'), str_replace('{{hofff_navi_art}}', $item['subitems'], $item['hofff_navi_art']), ('</div>'); else echo $item['subitems'];
+    ?><?php if ($item['isActive'] ?? false):
+    ?><li class="active <?php if($item['class']) echo $item['class']; ?>"><strong class="<?php if($item['isActive']) echo 'active '; if($item['class']) echo $item['class']; ?>"<?php if (!empty($item['subitems']) || (!empty($item['hofff_navi_art']))) echo ' aria-haspopup="true"'; ?>><span itemprop="name"><?= $item['link'] ?></span></strong><?php if(!empty($item['hofff_navi_art'])) echo ('<div class="sublevel">'), str_replace('{{hofff_navi_art}}', $item['subitems'] ?? '', $item['hofff_navi_art'] ?? ''), ('</div>'); else echo $item['subitems'] ?? '';
     ?></li
     ><?php else:
       ?><li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?>
         ><a href="<?= $item['href'] ?: './' ?>"
             title="<?= $item['pageTitle'] ?: $item['title'] ?>"
-            class="<?php if($item['isActive']) echo 'active '; if($item['class']) echo $item['class']; ?>"
+            class="<?php if(!empty($item['isActive'])) echo 'active '; if(!empty($item['class'])) echo $item['class']; ?>"
             <?php if ($item['accesskey'] !== '') echo ' accesskey="' . $item['accesskey'] . '"'; ?>
             <?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?>
-            <?= $item['rel'] ?>
-            <?= $item['target'] ?>
-            <?php if (!empty($item['subitems']) || ($item['hofff_navi_art'])) echo ' aria-haspopup="true"'; ?> itemprop="url"
+            <?= $item['rel'] ?? '' ?>
+            <?= $item['target'] ?? '' ?>
+            <?php if (!empty($item['subitems']) || (!empty($item['hofff_navi_art']))) echo ' aria-haspopup="true"'; ?> itemprop="url"
           ><span itemprop="name"><?= $item['link']
         ?></span
         ></a
-        ><?php if($item['hofff_navi_art']) echo ('<div class="sublevel">'), str_replace('{{hofff_navi_art}}', $item['subitems'], $item['hofff_navi_art']), ('</div>'); else echo $item['subitems'];
+        ><?php if(!empty($item['hofff_navi_art'])) echo ('<div class="sublevel">'), str_replace('{{hofff_navi_art}}', $item['subitems'] ?? '', $item['hofff_navi_art'] ?? ''), ('</div>'); else echo $item['subitems'] ?? '';
       ?></li
     ><?php endif;
   ?><?php endforeach; ?>
