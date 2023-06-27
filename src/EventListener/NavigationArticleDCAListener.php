@@ -112,7 +112,7 @@ SQL;
             $key                                  = $article['parent'] . ' (ID ' . $article['pid'] . ')';
             $articles[$key][(int) $article['id']] = $article['title']
                 . ' ('
-                . ($GLOBALS['TL_LANG']['COLS'][$article['inColumn']] ?: $article['inColumn'])
+                . ($GLOBALS['TL_LANG']['COLS'][$article['inColumn']] ?? $article['inColumn'])
                 . ', ID '
                 . $article['id']
                 . ')';

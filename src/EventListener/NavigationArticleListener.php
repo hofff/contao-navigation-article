@@ -6,6 +6,7 @@ namespace Hofff\Contao\NavigationArticle\EventListener;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Renderer\ArticleRenderer;
 use Hofff\Contao\Navigation\Event\ItemEvent;
@@ -72,10 +73,11 @@ final class NavigationArticleListener
 
         $page['hofff_navi_art'] = implode('', $page['hofff_navi_arts']);
 
-        if (strpos($navi->cssID[1], 'hofff-navi-art') === false) {
-            $data        = $navi->cssID;
-            $data[1]     = trim($data[1] . ' hofff-navi-art');
-            $navi->cssID = $data;
+        $cssId = StringUtil::deserialize($navi->cssID, true);
+
+        if (strpos($cssId[1] ?? '', 'hofff-navi-art') === false) {
+            $cssId[1]    = trim(($cssId[1] ?? '') . ' hofff-navi-art');
+            $navi->cssID = $cssId;
         }
 
         $event->changeItem($page);
