@@ -1,17 +1,11 @@
-/*
-!/.gitignore
-!/TL_ROOT/
-!/dev/
-!/ext/
-!/publish/
-!/build.xml
-!/README.md
-!/composer.json
-!/src
-!/.phpcq.yaml.dist
-!/.phpcq.lock
-!/phpcs.xml.dist
-!/phpunit.xml.dist
-!/psalm.xml
-!/.github
-!/.composer-require-checker.json
+# Companion
+/.env.companion
+
+# Composer
+/composer.lock
+/vendor
+
+# PHPCQ
+/.phpcq
+/.phpcq.yaml
+/.phpcs-cache

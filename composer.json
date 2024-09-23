@@ -34,20 +34,20 @@
     "source": "https://github.com/hofff/contao-navigation-article"
   },
   "require": {
-    "php": "^7.4 || ^8.1",
-    "contao/core-bundle": "^4.13 || ^5.0",
+    "php": "^8.2",
+    "contao/core-bundle": "^4.13 || ^5.3",
     "doctrine/dbal": "^3.4",
     "hofff/contao-content": "^2.1 || ^3.0",
     "hofff/contao-navigation": "^2.0",
     "menatwork/contao-multicolumnwizard-bundle": "^3.5",
-    "symfony/config": "^4.4 || ^5.0 || ^6.0",
-    "symfony/dependency-injection": "^4.4 || ^5.0 || ^6.0",
-    "symfony/http-kernel": "^4.4 || ^5.0 || ^6.0"
+    "symfony/config": "^5.4 || ^6.4",
+    "symfony/dependency-injection": "^5.4 || ^6.4",
+    "symfony/http-kernel": "^5.4 || ^6.4"
   },
   "require-dev": {
-    "contao/manager-plugin": "^2.0",
-    "doctrine/coding-standard": "^9.0",
-    "phpcq/runner-bootstrap": "1.x-dev"
+    "contao/manager-plugin": "^2.1",
+    "doctrine/coding-standard": "^12.0",
+    "phpcq/runner-bootstrap": "@dev"
   },
   "replace": {
     "backboneit/contao-navigation-article": "self.version",
@@ -65,7 +65,8 @@
       "contao-components/installer": true,
       "contao/manager-plugin": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "contao-community-alliance/composer-plugin": true
+      "contao-community-alliance/composer-plugin": true,
+      "php-http/discovery": true
     },
     "sort-packages": true
   },
@@ -75,5 +76,8 @@
       "dev-2.x": "2.0.x-dev"
     },
     "contao-manager-plugin": "Hofff\\Contao\\NavigationArticle\\ContaoManager\\Plugin"
+  },
+  "conflict": {
+    "contao/manager-plugin": "<2.1 || >= 3.0"
   }
 }
