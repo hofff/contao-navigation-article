@@ -12,6 +12,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\User;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use MenAtWork\MultiColumnWizardBundle\Contao\Widgets\MultiColumnWizard;
 
@@ -24,17 +25,14 @@ use function sprintf;
 
 final class NavigationArticleDCAListener
 {
-    private Connection $connection;
-
     /** @var array<int,list<array<string,mixed>>> */
     private array $sets = [];
 
     /** If true only reference articles (hofff_content_hide) are provides as options. */
     private bool $referencesOnly;
 
-    public function __construct(Connection $connection, bool $referencesOnly)
+    public function __construct(private Connection $connection, bool $referencesOnly)
     {
-        $this->connection     = $connection;
         $this->referencesOnly = $referencesOnly;
     }
 
@@ -92,7 +90,7 @@ SQL;
         if ($user instanceof BackendUser && $user->isAdmin) {
             if ($rootPages) {
                 $query->andWhere('a.pid IN(:root)');
-                $query->setParameter('root', array_unique($rootPages), Connection::PARAM_INT_ARRAY);
+                $query->setParameter('root', array_unique($rootPages), ArrayParameterType::INTEGER);
             }
         } else {
             $pids = $this->filterPids($rootPages, $user);
@@ -101,7 +99,7 @@ SQL;
             }
 
             $query->andWhere('a.pid IN(:root)');
-            $query->setParameter('root', $pids, Connection::PARAM_INT_ARRAY);
+            $query->setParameter('root', $pids, ArrayParameterType::INTEGER);
         }
 
         // Edit the result
@@ -128,7 +126,7 @@ SQL;
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function loadForPage($rows, DataContainer $dataContainer): array
+    public function loadForPage(array|string $rows, DataContainer $dataContainer): array
     {
         $query = 'SELECT	j.*
 			FROM	tl_hofff_navi_art AS j
@@ -141,7 +139,7 @@ SQL;
     }
 
     /** @param array<int,array<string,mixed>>|string $rows */
-    public function saveForPage($rows, DataContainer $dataContainer): void
+    public function saveForPage(array|string $rows, DataContainer $dataContainer): void
     {
         $rows                                 = StringUtil::deserialize($rows, true);
         $this->sets[(int) $dataContainer->id] = [];
@@ -165,7 +163,7 @@ SQL;
     {
         $this->connection->executeStatement(
             'DELETE FROM tl_hofff_navi_art WHERE page = :page',
-            ['page' => $dataContainer->id]
+            ['page' => $dataContainer->id],
         );
 
         if (! isset($this->sets[(int) $dataContainer->id])) {
@@ -181,7 +179,9 @@ SQL;
     private function getRootPages(int $intPid): array
     {
         // Limit pages to the website root
-        $database  = Database::getInstance();
+        $database = Database::getInstance();
+
+        /** @psalm-suppress TooManyArguments */
         $article   = $database->prepare('SELECT pid FROM tl_article WHERE id=?')->limit(1)->execute($intPid);
         $rootPages = [];
 
@@ -202,6 +202,7 @@ SQL;
     private function getPageId(int $pid): int
     {
         if (Input::get('act') === 'overrideAll') {
+            /** @psalm-suppress RiskyCast */
             return (int) Input::get('id');
         }
 

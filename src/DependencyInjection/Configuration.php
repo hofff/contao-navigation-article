@@ -18,7 +18,7 @@ final class Configuration implements ConfigurationInterface
                 ->booleanNode('reference_articles_only')
                     ->info(
                         'By default it\'s only possible to select articles marked as references. '
-                        . 'By disabling this setting you can select all articles'
+                        . 'By disabling this setting you can select all articles',
                     )
                     ->defaultTrue()
                 ->end()

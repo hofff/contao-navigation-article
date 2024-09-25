@@ -6,6 +6,7 @@ namespace Hofff\Contao\NavigationArticle\EventListener;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Renderer\ArticleRenderer;
@@ -20,17 +21,14 @@ use function trim;
 
 final class NavigationArticleListener
 {
-    private Connection $connection;
-
-    private ContaoFramework $contaoFramework;
-
     /** @var array<int, array<int, list<array<string, mixed>>>> */
     private array $articles = [];
 
-    public function __construct(Connection $connection, ContaoFramework $contaoFramework)
-    {
-        $this->connection      = $connection;
-        $this->contaoFramework = $contaoFramework;
+    public function __construct(
+        private Connection $connection,
+        private ContaoFramework $contaoFramework,
+        private TokenChecker $tokenChecker,
+    ) {
     }
 
     public function __invoke(ItemEvent $event): void
@@ -38,6 +36,7 @@ final class NavigationArticleListener
         $navi = $event->moduleModel();
         $page = $event->item();
 
+        /** @psalm-suppress RedundantCastGivenDocblockType */
         $articles = $this->getNavigationArticles((int) $navi->id, (int) $page['id']);
         if (! $articles) {
             return;
@@ -57,7 +56,7 @@ final class NavigationArticleListener
                 continue;
             }
 
-            $renderer = new ArticleRenderer();
+            $renderer = new ArticleRenderer($this->tokenChecker);
             $renderer->setArticle($models[$article['article']]);
             $renderer->setRenderContainer((bool) $article['container']);
             $renderer->setExcludeFromSearch((bool) $article['nosearch']);
@@ -122,9 +121,9 @@ final class NavigationArticleListener
             array_unique(
                 array_map(
                     static fn (array $article) => (int) $article['article'],
-                    $articles
-                )
-            )
+                    $articles,
+                ),
+            ),
         );
     }
 }
