@@ -126,7 +126,7 @@ SQL;
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function loadForPage(array|string $rows, DataContainer $dataContainer): array
+    public function loadForPage(array|string|null $rows, DataContainer $dataContainer): array
     {
         $query = 'SELECT	j.*
 			FROM	tl_hofff_navi_art AS j
