@@ -10,4 +10,5 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['hofff_navi_art_enable'] = [
     'exclude'   => true,
     'inputType' => 'checkbox',
     'eval'      => ['tl_class' => 'cbx'],
+    'sql'       => "char(1) NOT NULL default ''",
 ];
