@@ -11,6 +11,8 @@ use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Hofff\Contao\Content\Renderer\ArticleRenderer;
 use Hofff\Contao\Navigation\Event\ItemEvent;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as CoreSecurity;
 
 use function array_map;
 use function array_unique;
@@ -28,6 +30,7 @@ final class NavigationArticleListener
         private Connection $connection,
         private ContaoFramework $contaoFramework,
         private TokenChecker $tokenChecker,
+        private Security|CoreSecurity $security,
     ) {
     }
 
@@ -56,7 +59,7 @@ final class NavigationArticleListener
                 continue;
             }
 
-            $renderer = new ArticleRenderer($this->tokenChecker);
+            $renderer = new ArticleRenderer($this->tokenChecker, $this->security);
             $renderer->setArticle($models[$article['article']]);
             $renderer->setRenderContainer((bool) $article['container']);
             $renderer->setExcludeFromSearch((bool) $article['nosearch']);
