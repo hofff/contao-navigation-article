@@ -10,10 +10,12 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Hofff\Contao\Navigation\HofffContaoNavigationBundle;
 use Hofff\Contao\NavigationArticle\HofffContaoNavigationArticleBundle;
+use Override;
 
 final class Plugin implements BundlePluginInterface
 {
     /** {@inheritDoc} */
+    #[Override]
     public function getBundles(ParserInterface $parser): array
     {
         return [

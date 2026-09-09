@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
-<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://getpsalm.org/schema/config" errorLevel="3"
-       hideExternalErrors="true"
-       xsi:schemaLocation="https://getpsalm.org/schema/config https://getpsalm.org/schema/config" findUnusedCode="false"
-       findUnusedBaselineEntry="false">
+<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://getpsalm.org/schema/config" errorLevel="3" hideExternalErrors="true" xsi:schemaLocation="https://getpsalm.org/schema/config https://getpsalm.org/schema/config" findUnusedCode="false" findUnusedBaselineEntry="false">
 <projectFiles>
         <directory name="src"/>
         <ignoreFiles>
@@ -13,12 +10,12 @@
     </projectFiles>
 
     <issueHandlers>
-        <InternalMethod>
+        <UndefinedClass>
             <errorLevel type="suppress">
-                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::getAdapter"/>
-                <referencedMethod name="Contao\CoreBundle\Framework\Adapter::__call"/>
+                <!-- Remove when dropping Contao 4.13 support -->
+                <referencedClass name="Symfony\Component\Security\Core\Security"/>
             </errorLevel>
-        </InternalMethod>
+        </UndefinedClass>
     </issueHandlers>
 
     <universalObjectCrates>

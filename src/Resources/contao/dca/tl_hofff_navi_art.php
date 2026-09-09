@@ -16,29 +16,13 @@ $GLOBALS['TL_DCA']['tl_hofff_navi_art'] = [
         ],
     ],
     'fields' => [
-        'page'      => [
-            'sql' => 'int(10) unsigned NOT NULL default 0',
-        ],
-        'sorting'   => [
-            'sql' => 'int(10) unsigned NOT NULL default 0',
-        ],
-        'module'    => [
-            'sql' => 'int(10) unsigned NOT NULL default 0',
-        ],
-        'article'   => [
-            'sql' => 'int(10) unsigned NOT NULL default 0',
-        ],
-        'cssId'     => [
-            'sql' => 'varchar(255) NOT NULL default \'\'',
-        ],
-        'cssClass'  => [
-            'sql' => 'varchar(255) NOT NULL default \'\'',
-        ],
-        'nosearch'  => [
-            'sql' => 'char(1) NOT NULL default \'\'',
-        ],
-        'container' => [
-            'sql' => 'char(1) NOT NULL default \'\'',
-        ],
+        'page'      => ['sql' => 'int(10) unsigned NOT NULL default 0'],
+        'sorting'   => ['sql' => 'int(10) unsigned NOT NULL default 0'],
+        'module'    => ['sql' => 'int(10) unsigned NOT NULL default 0'],
+        'article'   => ['sql' => 'int(10) unsigned NOT NULL default 0'],
+        'cssId'     => ['sql' => 'varchar(255) NOT NULL default \'\''],
+        'cssClass'  => ['sql' => 'varchar(255) NOT NULL default \'\''],
+        'nosearch'  => ['sql' => 'char(1) NOT NULL default \'\''],
+        'container' => ['sql' => 'char(1) NOT NULL default \'\''],
     ],
 ];
