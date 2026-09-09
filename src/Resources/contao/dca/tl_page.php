@@ -1,38 +1,37 @@
 <?php
 
-use Hofff\Contao\NavigationArticle\EventListener\NavigationArticleDCAListener;
-
-$GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'][] = [NavigationArticleDCAListener::class, 'submitPage'];
+declare(strict_types=1);
 
 foreach ($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strSelector => &$strPalette) {
-    if ($strSelector !== '__selector__') {
-        $strPalette .= ';{hofff_navi_art_legend},hofff_navi_art_articles';
+    if ($strSelector === '__selector__') {
+        continue;
     }
+
+    $strPalette .= ';{hofff_navi_art_legend},hofff_navi_art_articles';
 }
+
 unset($strPalette);
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['hofff_navi_art_articles'] = [
-    'label'         => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_articles'],
-    'inputType'     => 'multiColumnWizard',
-    'eval'          => [
-        'tl_class'          => 'hofff-navi-art-articles',
+    'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_articles'],
+    'inputType' => 'multiColumnWizard',
+    'eval'      => [
+        'tl_class'       => 'hofff-navi-art-articles',
         'doNotSaveEmpty' => true,
         'columnFields'   => [
             'module'    => [
-                'label'            => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_module'],
-                'inputType'        => 'select',
-                'options_callback' => [NavigationArticleDCAListener::class, 'getModules'],
-                'eval'             => [
+                'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_module'],
+                'inputType' => 'select',
+                'eval'      => [
                     'includeBlankOption' => true,
                     'chosen'             => true,
                     'style'              => 'width:100%',
                 ],
             ],
             'article'   => [
-                'label'            => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_article'],
-                'inputType'        => 'select',
-                'options_callback' => [NavigationArticleDCAListener::class, 'getArticles'],
-                'eval'             => [
+                'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_article'],
+                'inputType' => 'select',
+                'eval'      => [
                     'includeBlankOption' => true,
                     'chosen'             => true,
                     'style'              => 'width:100%',
@@ -44,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hofff_navi_art_articles'] = [
                 'inputType' => 'text',
                 'eval'      => [],
             ],
-            'cssClass'     => [
+            'cssClass'  => [
                 'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_cssClass'],
                 'exclude'   => true,
                 'inputType' => 'text',
@@ -53,21 +52,13 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hofff_navi_art_articles'] = [
             'nosearch'  => [
                 'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_nosearch_short'],
                 'inputType' => 'checkbox',
-                'eval'      => [
-                ],
+                'eval'      => [],
             ],
             'container' => [
                 'label'     => &$GLOBALS['TL_LANG']['tl_page']['hofff_navi_art_container_short'],
                 'inputType' => 'checkbox',
-                'eval'      => [
-                ],
+                'eval'      => [],
             ],
         ],
-    ],
-    'load_callback' => [
-        [NavigationArticleDCAListener::class, 'loadForPage'],
-    ],
-    'save_callback' => [
-        [NavigationArticleDCAListener::class, 'saveForPage'],
     ],
 ];

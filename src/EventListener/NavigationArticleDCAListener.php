@@ -4,37 +4,41 @@ declare(strict_types=1);
 
 namespace Hofff\Contao\NavigationArticle\EventListener;
 
-use function array_merge;
-use function array_unique;
 use Contao\BackendUser;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\Database;
+use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\User;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
-use PDO;
+use MenAtWork\MultiColumnWizardBundle\Contao\Widgets\MultiColumnWizard;
+
+use function array_merge;
+use function array_unique;
+use function array_unshift;
+use function array_values;
+use function in_array;
+use function sprintf;
 
 final class NavigationArticleDCAListener
 {
-    /** @var Connection */
-    private $connection;
+    /** @var array<int,list<array<string,mixed>>> */
+    private array $sets = [];
 
-    private $sets;
+    /** If true only reference articles (hofff_content_hide) are provides as options. */
+    private bool $referencesOnly;
 
-    /**
-     * If true only reference articles (hofff_content_hide) are provides as options.
-     *
-     * @var bool
-     */
-    private $referenceArticlesOnly;
-
-    public function __construct(Connection $connection, bool $referenceArticlesOnly)
+    public function __construct(private Connection $connection, bool $referencesOnly)
     {
-        $this->connection            = $connection;
-        $this->referenceArticlesOnly = $referenceArticlesOnly;
+        $this->referencesOnly = $referencesOnly;
     }
 
+    /** @return array<string, array<int, string>> */
+    #[AsCallback(table: 'tl_page', target: 'fields.hofff_navi_art_articles.eval.columnFields.module.options')]
     public function getModules(): array
     {
         $query = <<< 'SQL'
@@ -52,148 +56,184 @@ ORDER BY
   m.name
 SQL;
 
-        $statement = $this->connection->prepare($query);
-        $statement->bindValue('type', 'backboneit_navigation_menu');
-        $statement->execute();
-
+        $result  = $this->connection->executeQuery($query, ['type' => 'hofff_navigation_menu']);
         $options = [];
 
-        while ($row = $statement->fetch(PDO::FETCH_OBJ)) {
-            $theme                     = sprintf('%s [%s]', $row->theme, $row->pid);
-            $options[$theme][$row->id] = sprintf('%s [%s]', $row->name, $row->id);
+        while ($row = $result->fetchAssociative()) {
+            $theme                             = sprintf('%s [%s]', $row['theme'], $row['pid']);
+            $options[$theme][(int) $row['id']] = sprintf('%s [%s]', $row['name'], $row['id']);
         }
 
         return $options;
     }
 
-    public function getArticles($objDC): array
+    /**
+     * @return array<string, array<int, string>>
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    #[AsCallback(table: 'tl_page', target: 'fields.hofff_navi_art_articles.eval.columnFields.article.options')]
+    public function getArticles(MultiColumnWizard $dataContainer): array
     {
-        $arrPids    = [];
-        $arrArticle = [];
-        $arrRoot    = [];
-        $intPid     = $objDC->activeRecord->pid;
-        $database   = Database::getInstance();
-        $user       = BackendUser::getInstance();
-
-        if (Input::get('act') === 'overrideAll') {
-            $intPid = Input::get('id');
-        }
-
-        // Limit pages to the website root
-        $objArticle = $database->prepare("SELECT pid FROM tl_article WHERE id=?")
-            ->limit(1)
-            ->execute($intPid);
-
-        if ($objArticle->numRows) {
-            $objPage = PageModel::findWithDetails($objArticle->pid);
-            $arrRoot = $database->getChildRecords($objPage->rootId, 'tl_page');
-            array_unshift($arrRoot, $objPage->rootId);
-        }
-
-        unset($objArticle);
+        $articles  = [];
+        $pageId    = $this->getPageId((int) $dataContainer->activeRecord->pid);
+        $user      = BackendUser::getInstance();
+        $rootPages = $this->getRootPages($pageId);
 
         $query = $this->connection->createQueryBuilder()
             ->select('a.id, a.pid, a.title, a.inColumn, p.title AS parent')
-            ->from('tl_article', 'a')
-            ->leftJoin('a', 'tl_page', 'p', 'p.id=a.pid')
+            ->from('tl_article', 'a')->leftJoin('a', 'tl_page', 'p', 'p.id=a.pid')
             ->orderBy('parent, a.sorting');
 
-        if ($this->referenceArticlesOnly) {
-            $query
-                ->andWhere('a.hofff_content_hide=:active')
-                ->setParameter('active', '1');
+        if ($this->referencesOnly) {
+            $query->andWhere('a.hofff_content_hide=:active')->setParameter('active', '1');
         }
 
         // Limit pages to the user's pagemounts
-        if ($user->isAdmin) {
-            if ($arrRoot) {
+        if ($user instanceof BackendUser && $user->isAdmin) {
+            if ($rootPages) {
                 $query->andWhere('a.pid IN(:root)');
-                $query->setParameter('root', array_unique($arrRoot), Connection::PARAM_INT_ARRAY);
+                $query->setParameter('root', array_unique($rootPages), ArrayParameterType::INTEGER);
             }
         } else {
-            foreach ($user->pagemounts as $id) {
-                if (!\in_array($id, $arrRoot)) {
-                    continue;
-                }
-
-                $arrPids[] = [$id];
-                $arrPids[] = $database->getChildRecords($id, 'tl_page');
-            }
-
-            $arrPids = array_unique(array_merge(...$arrPids));
-
-            if (empty($arrPids)) {
-                return $arrArticle;
+            $pids = $this->filterPids($rootPages, $user);
+            if (empty($pids)) {
+                return $articles;
             }
 
             $query->andWhere('a.pid IN(:root)');
-            $query->setParameter('root', $arrPids, Connection::PARAM_INT_ARRAY);
+            $query->setParameter('root', $pids, ArrayParameterType::INTEGER);
         }
 
         // Edit the result
-        $statement = $query->execute();
+        $statement = $query->executeQuery();
         System::loadLanguageFile('tl_article');
 
-        while ($objArticle = $statement->fetch(PDO::FETCH_OBJ)) {
-            $key                               = $objArticle->parent . ' (ID ' . $objArticle->pid . ')';
-            $arrArticle[$key][$objArticle->id] = $objArticle->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ?: $objArticle->inColumn) . ', ID ' . $objArticle->id . ')';
+        while ($article = $statement->fetchAssociative()) {
+            $key                                  = $article['parent'] . ' (ID ' . $article['pid'] . ')';
+            $articles[$key][(int) $article['id']] = $article['title']
+                . ' ('
+                . ($GLOBALS['TL_LANG']['COLS'][$article['inColumn']] ?? $article['inColumn'])
+                . ', ID '
+                . $article['id']
+                . ')';
         }
 
-        return $arrArticle;
+        return $articles;
     }
 
-    public function loadForPage($arrRows, $objDC)
+    /**
+     * @param array<int,array<string,mixed>>|string $rows
+     *
+     * @return list<array<string,mixed>>
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    #[AsCallback(table: 'tl_page', target: 'fields.hofff_navi_art_articles.load')]
+    public function loadForPage(array|string|null $rows, DataContainer $dataContainer): array
     {
-        $statement = $this->connection->prepare(
-            'SELECT	j.*
+        $query = 'SELECT	j.*
 			FROM	tl_hofff_navi_art AS j
 			JOIN	tl_module AS m ON m.id = j.module
 			JOIN	tl_theme AS t ON t.id = m.pid
 			WHERE	j.page = :page
-			ORDER BY t.name, m.name'
+			ORDER BY t.name, m.name';
+
+        return $this->connection->fetchAllAssociative($query, ['page' => $dataContainer->id]);
+    }
+
+    /** @param array<int,array<string,mixed>>|string $rows */
+    #[AsCallback(table: 'tl_page', target: 'fields.hofff_navi_art_articles.save')]
+    public function saveForPage(array|string $rows, DataContainer $dataContainer): void
+    {
+        $rows                                 = StringUtil::deserialize($rows, true);
+        $this->sets[(int) $dataContainer->id] = [];
+
+        /** @psalm-var array<string,mixed> $row */
+        foreach (array_values($rows) as $i => $row) {
+            $row['page']    = $dataContainer->id;
+            $row['sorting'] = $i;
+            $row['module']  = (int) $row['module'];
+            $row['article'] = (int) $row['article'];
+
+            if ($row['module'] < 1 || $row['article'] < 1) {
+                continue;
+            }
+
+            $this->sets[(int) $dataContainer->id][] = $row;
+        }
+    }
+
+    #[AsCallback(table: 'tl_page', target: 'config.onsubmit')]
+    public function submitPage(DataContainer $dataContainer): void
+    {
+        $this->connection->executeStatement(
+            'DELETE FROM tl_hofff_navi_art WHERE page = :page',
+            ['page' => $dataContainer->id],
         );
 
-        $statement->bindValue('page', $objDC->id);
-        $statement->execute();
-
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function saveForPage($rows, $objDC)
-    {
-        $rows                   = StringUtil::deserialize($rows, true);
-        $this->sets[$objDC->id] = [];
-
-        foreach (array_values($rows) as $i => $arrRow) {
-            $arrRow['page']    = $objDC->id;
-            $arrRow['sorting'] = $i;
-            $arrRow['module']  = (int) $arrRow['module'];
-            $arrRow['article'] = (int) $arrRow['article'];
-
-            if ($arrRow['module'] > 0 && $arrRow['article'] > 0) {
-                $this->sets[$objDC->id][] = $arrRow;
-            }
-        }
-
-        return null;
-    }
-
-    public function submitPage($objDC)
-    {
-        if (!isset($this->sets[$objDC->id])) {
+        if (! isset($this->sets[(int) $dataContainer->id])) {
             return;
         }
 
-        $statement = $this->connection->prepare('DELETE FROM tl_hofff_navi_art WHERE page = :page');
-        $statement->bindValue('page', $objDC->id);
-        $statement->execute();
-
-        if (!isset($this->sets[$objDC->id])) {
-            return;
-        }
-
-        foreach ($this->sets[$objDC->id] as $set) {
+        foreach ($this->sets[(int) $dataContainer->id] as $set) {
             $this->connection->insert('tl_hofff_navi_art', $set);
         }
+    }
+
+    /** @return list<int> */
+    private function getRootPages(int $intPid): array
+    {
+        // Limit pages to the website root
+        $database = Database::getInstance();
+
+        /** @psalm-suppress TooManyArguments */
+        $article   = $database->prepare('SELECT pid FROM tl_article WHERE id=?')->limit(1)->execute($intPid);
+        $rootPages = [];
+
+        if ($article->numRows) {
+            $objPage = PageModel::findWithDetails($article->pid);
+            if ($objPage === null) {
+                return $rootPages;
+            }
+
+            $rootPages = $database->getChildRecords($objPage->rootId, 'tl_page');
+            /** @psalm-var list<int> $rootPages */
+            array_unshift($rootPages, $objPage->rootId);
+        }
+
+        return $rootPages;
+    }
+
+    private function getPageId(int $pid): int
+    {
+        if (Input::get('act') === 'overrideAll') {
+            /** @psalm-suppress RiskyCast */
+            return (int) Input::get('id');
+        }
+
+        return $pid;
+    }
+
+    /**
+     * @param list<int> $rootIds
+     *
+     * @return list<int>
+     */
+    private function filterPids(array $rootIds, User $user): array
+    {
+        $database = Database::getInstance();
+        $pids     = [];
+
+        foreach ((array) $user->pagemounts as $id) {
+            if (! in_array($id, $rootIds)) {
+                continue;
+            }
+
+            $pids[] = [(int) $id];
+            $pids[] = $database->getChildRecords($id, 'tl_page');
+        }
+
+        return array_values(array_unique(array_merge(...$pids)));
     }
 }

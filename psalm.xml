@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://getpsalm.org/schema/config" errorLevel="3" hideExternalErrors="true" xsi:schemaLocation="https://getpsalm.org/schema/config https://getpsalm.org/schema/config" findUnusedCode="false" findUnusedBaselineEntry="false">
+<projectFiles>
+        <directory name="src"/>
+        <ignoreFiles>
+            <directory name="src/Resources/contao/dca"/>
+            <directory name="src/Resources/contao/languages"/>
+            <file name="src/DependencyInjection/Configuration.php"/>
+        </ignoreFiles>
+    </projectFiles>
+
+    <universalObjectCrates>
+        <class name="Contao\Database\Result"/>
+    </universalObjectCrates>
+</psalm>

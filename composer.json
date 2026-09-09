@@ -1,14 +1,14 @@
 {
   "name": "hofff/contao-navigation-article",
   "description": "Integrate articles into hofff.com navigation module for Contao CMS",
+  "license": "LGPL-3.0-or-later",
+  "type": "contao-bundle",
   "keywords": [
     "navigation",
     "article",
     "page",
     "contao"
   ],
-  "type": "contao-module",
-  "license": "LGPL-3.0+",
   "authors": [
     {
       "name": "Oliver Hoff",
@@ -34,34 +34,51 @@
     "source": "https://github.com/hofff/contao-navigation-article"
   },
   "require": {
-    "php": ">=7.1",
-    "ext-pdo": "*",
-    "hofff/contao-navigation": "~1.8",
-    "contao/core-bundle": "^4.4",
-    "hofff/contao-content": "~2.1 || ^3.0",
-    "menatwork/contao-multicolumnwizard": "^3.3",
-    "symfony/http-kernel": "^3.3 || ^4.0",
-    "symfony/config": "^3.3 || ^4.0",
-    "symfony/dependency-injection": "^3.3 || ^4.0"
+    "php": "^8.3",
+    "contao/core-bundle": "^5.3",
+    "doctrine/dbal": "^3.10 || ^4.0",
+    "hofff/contao-content": "^4.1.2",
+    "hofff/contao-navigation": "^2.0",
+    "menatwork/contao-multicolumnwizard-bundle": "^3.5",
+    "symfony/config": "^6.4 || ^7.4",
+    "symfony/dependency-injection": "^6.4 || ^7.4",
+    "symfony/http-kernel": "^6.4 || ^7.4",
+    "symfony/security-bundle": "^6.4 || ^7.4",
+    "symfony/security-core": "^6.4 || ^7.4"
   },
   "require-dev": {
-    "contao/manager-plugin": "^2.0",
-    "php-http/guzzle6-adapter": "^1.1"
+    "contao/manager-plugin": "^2.1",
+    "phpcq/runner-bootstrap": "@dev"
   },
   "replace": {
     "backboneit/contao-navigation-article": "self.version",
     "contao-legacy/backboneit_navigation_article": "self.version"
+  },
+  "conflict": {
+    "contao/manager-plugin": "<2.1 || >= 3.0"
   },
   "autoload": {
     "psr-4": {
       "Hofff\\Contao\\NavigationArticle\\": "src/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "contao-community-alliance/composer-plugin": true,
+      "contao-components/installer": true,
+      "contao/manager-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "php-http/discovery": true
+    },
+    "sort-packages": true
+  },
   "extra": {
-    "contao-manager-plugin": "Hofff\\Contao\\NavigationArticle\\ContaoManager\\Plugin",
     "branch-alias": {
-      "dev-1.x": "1.0.x-dev",
-      "dev-2.x": "2.0.x-dev"
-    }
+      "dev-develop": "3.1.x-dev",
+      "dev-master": "3.0.x-dev",
+      "dev-support/1.x": "1.0.x-dev",
+      "dev-support/2.x": "2.0.x-dev"
+    },
+    "contao-manager-plugin": "Hofff\\Contao\\NavigationArticle\\ContaoManager\\Plugin"
   }
 }

@@ -1,7 +1,11 @@
-/*
-!/.gitignore
-!/src/
-!/publish/
-!/build.xml
-!/README.md
-!/composer.json
+# Companion
+/.env.companion
+
+# Composer
+/composer.lock
+/vendor
+
+# PHPCQ
+/.phpcq
+/.phpcq.yaml
+/.phpcs-cache

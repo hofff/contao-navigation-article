@@ -11,15 +11,14 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-
-        $rootNode = $treeBuilder->root('hofff_contao_navigation_article');
+        $treeBuilder = new TreeBuilder('hofff_contao_navigation_article');
+        $rootNode    = $treeBuilder->getRootNode();
         $rootNode
             ->children()
                 ->booleanNode('reference_articles_only')
                     ->info(
                         'By default it\'s only possible to select articles marked as references. '
-                        . 'By disabling this setting you can select all articles'
+                        . 'By disabling this setting you can select all articles',
                     )
                     ->defaultTrue()
                 ->end()
