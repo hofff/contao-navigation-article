@@ -37,7 +37,7 @@
     "php": "^8.2",
     "contao/core-bundle": "^5.3",
     "doctrine/dbal": "^3.10 || ^4.0",
-    "hofff/contao-content": "^3.0 || ^4.0",
+    "hofff/contao-content": "^4.1.2",
     "hofff/contao-navigation": "^2.0",
     "menatwork/contao-multicolumnwizard-bundle": "^3.5",
     "symfony/config": "^6.4 || ^7.4",
