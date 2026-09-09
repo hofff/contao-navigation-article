@@ -34,7 +34,7 @@
     "source": "https://github.com/hofff/contao-navigation-article"
   },
   "require": {
-    "php": "^8.2",
+    "php": "^8.3",
     "contao/core-bundle": "^5.3",
     "doctrine/dbal": "^3.10 || ^4.0",
     "hofff/contao-content": "^4.1.2",
