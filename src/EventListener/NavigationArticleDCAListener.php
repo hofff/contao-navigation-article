@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hofff\Contao\NavigationArticle\EventListener;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
@@ -37,6 +38,7 @@ final class NavigationArticleDCAListener
     }
 
     /** @return array<string, array<int, string>> */
+    #[AsCallback(table: 'tl_page', target: 'fields.hofff_navi_art_articles.eval.columnFields.module.options')]
     public function getModules(): array
     {
         $query = <<< 'SQL'
@@ -70,6 +72,7 @@ SQL;
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
+    #[AsCallback(table: 'tl_page', target: 'fields.hofff_navi_art_articles.eval.columnFields.article.options')]
     public function getArticles(MultiColumnWizard $dataContainer): array
     {
         $articles  = [];
@@ -126,6 +129,7 @@ SQL;
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    #[AsCallback(table: 'tl_page', target: 'fields.hofff_navi_art_articles.load')]
     public function loadForPage(array|string|null $rows, DataContainer $dataContainer): array
     {
         $query = 'SELECT	j.*
@@ -139,6 +143,7 @@ SQL;
     }
 
     /** @param array<int,array<string,mixed>>|string $rows */
+    #[AsCallback(table: 'tl_page', target: 'fields.hofff_navi_art_articles.save')]
     public function saveForPage(array|string $rows, DataContainer $dataContainer): void
     {
         $rows                                 = StringUtil::deserialize($rows, true);
@@ -159,6 +164,7 @@ SQL;
         }
     }
 
+    #[AsCallback(table: 'tl_page', target: 'config.onsubmit')]
     public function submitPage(DataContainer $dataContainer): void
     {
         $this->connection->executeStatement(

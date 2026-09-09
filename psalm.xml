@@ -9,15 +9,6 @@
         </ignoreFiles>
     </projectFiles>
 
-    <issueHandlers>
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <!-- Remove when dropping Contao 4.13 support -->
-                <referencedClass name="Symfony\Component\Security\Core\Security"/>
-            </errorLevel>
-        </UndefinedClass>
-    </issueHandlers>
-
     <universalObjectCrates>
         <class name="Contao\Database\Result"/>
     </universalObjectCrates>
