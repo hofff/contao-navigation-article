@@ -21,7 +21,10 @@ jobs:
             phpcq_install: 'update'
           - php: 8.3
             phpcq_install: 'update'
-
+          - php: 8.4
+            phpcq_install: 'update'
+          - php: 8.5
+            phpcq_install: 'update'
     steps:
       - name: Pull source
         uses: actions/checkout@v4
