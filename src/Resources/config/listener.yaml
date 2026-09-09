@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: false
+        public: false
+
+    Hofff\Contao\NavigationArticle\EventListener\NavigationArticleListener:
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.security.token_checker'
+            - '@security.helper'
+        tags:
+            - { name: kernel.event_listener, event: Hofff\Contao\Navigation\Event\ItemEvent }
+
+    Hofff\Contao\NavigationArticle\EventListener\NavigationArticleDCAListener:
+        public: true
+        arguments:
+            - '@database_connection'
+            - '%hofff_contao_navigation_article.reference_articles_only%'
